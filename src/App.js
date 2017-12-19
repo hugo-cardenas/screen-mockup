@@ -13,9 +13,6 @@ class App extends Component {
         this.handleFileInput = this.handleFileInput.bind(this);
 
         this.state = {};
-        // this.state = {
-        //     img: 'https://raw.githubusercontent.com/hugo-cardenas/movie-stats-web/master/readme/screenshot.png'
-        // };
     }
 
     render() {
@@ -25,7 +22,11 @@ class App extends Component {
                 Screenshot -> Browser mockup
             </p>
             {this.renderFileInput()}
+            <canvas id="canvas"></canvas>
             {this.renderBrowserMockup()}
+            <div>
+                <a className="button" onClick={() => this.handleDownload()}>Download</a>
+            </div>
         </div>
     }
 
@@ -66,59 +67,32 @@ class App extends Component {
                 </div>
             </div>
             <div className="content">
-                <div className="img" style={style}></div>
+                {img ? <img src={img} /> : null}  
             </div>
         </div>;
+    }
+
+    convertToCanvas() {
+        const node = document.querySelector('.mockup-browser');
+        const canvas = document.querySelector('#canvas');
+        return html2canvas(node, { canvas, scale: 4 });
     }
 
     async handleFileInput(event) {
         try {
             const file = this.fileInput.files[0];
             const img = await getImageUrl(file);
-            this.setState({ img });
-            return;
-            const node = document.querySelector('.mockup-browser');
-
-
-
-            var w = 1000;
-            var h = 1000;
-            var canvas = document.createElement('canvas');
-            canvas.width = w*2;
-            canvas.height = h*2;
-            canvas.style.width = w + 'px';
-            canvas.style.height = h + 'px';
-            var context = canvas.getContext('2d');
-            context.scale(2,2);
-            html2canvas(node, { canvas: canvas, width: 320, height: 220}).then(function(canvas) {
-                document.body.appendChild(canvas);
+            this.setState({ img }, () => {
+                this.convertToCanvas().then(canvas => {
+                    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); 
+                    window.location.href = image;
+                });
             });
-
-
-
-
-            // html2canvas(node).then(function(canvas) {
-            //     document.body.appendChild(canvas);
-            // });
-
-            // domToImage.toPng(node, { quality: 1 })
-            // .then(function (dataUrl) {
-            //     var img = new Image();
-            //     img.src = dataUrl;
-            //     document.body.appendChild(img);
-            // })
-
-            // domToImage.toBlob(node)
-            //     .then(function (blob) {
-            //         saveAs(blob, 'my-node.png');
-            //     });
         } catch (error) {
             console.log(error);
             // this.setState({ error, status: STATUS_ERROR });
         }
     }
-
-
 }
 
 export default App;
@@ -126,13 +100,10 @@ export default App;
 const getImageUrl = async file => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-
         reader.onload = () => {
             return resolve(reader.result);
         };
         reader.onerror = reject;
-
         reader.readAsDataURL(file);
-        
     });
-}
+};
