@@ -1,8 +1,9 @@
 {
-  "name": "screen-to-shot",
+  "name": "screen-mockup",
   "version": "0.1.0",
   "scripts": {
     "build": "webpack --config ./config/webpack.prod.js",
+    "prettier": "prettier ",
     "start": "webpack-dev-server --open --config ./config/webpack.dev.js",
     "test": "jest test"
   },
@@ -15,7 +16,7 @@
       "raf/polyfill"
     ]
   },
-  "description": "My Webpack boilerplate (Webpack, Babel, React, Stylus)",
+  "description": "Create a browser mockup from a screenshot",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -41,6 +42,7 @@
     "file-loader": "^1.1.5",
     "html-webpack-plugin": "^2.30.1",
     "jest": "^21.2.1",
+    "prettier": "^1.9.2",
     "raf": "^3.4.0",
     "style-loader": "^0.19.0",
     "stylus": "^0.54.5",
