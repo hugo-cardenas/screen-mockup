@@ -14,68 +14,69 @@ class App extends Component {
     }
 
     render() {
-        return <div className="root-container container">
-            <h1 className="title">Screen Mockup</h1>
-            <p className="subtitle">
-                Screenshot -> Browser mockup
-            </p>
-            {this.renderFileInput()}
-            {this.renderBrowserMockup()}
-            {this.renderDownloadButton()}
-        </div>
+        return (
+            <div className="root-container container">
+                <h1 className="title">Screen Mockup</h1>
+                <p className="subtitle">Screenshot -> Browser mockup</p>
+                {this.renderFileInput()}
+                {this.renderBrowserMockup()}
+                {this.renderDownloadButton()}
+            </div>
+        );
     }
 
     renderFileInput() {
-        return <div className="file file-form">
-            <label className="file-label">
-                <input 
-                    className="file-input" 
-                    type="file" 
-                    onChange={() => this.handleFileInput()}
-                    ref={ref => this.fileInput = ref} />
-                <span className="file-cta">
-                    <span className="file-icon">
-                        <i className="fa fa-upload"></i>
+        return (
+            <div className="file file-form">
+                <label className="file-label">
+                    <input
+                        className="file-input"
+                        type="file"
+                        onChange={() => this.handleFileInput()}
+                        ref={ref => (this.fileInput = ref)}
+                    />
+                    <span className="file-cta">
+                        <span className="file-icon">
+                            <i className="fa fa-upload" />
+                        </span>
+                        <span className="file-label">Upload an image...</span>
                     </span>
-                    <span className="file-label">Upload an image...</span>
-                </span>
-            </label>
-        </div>;
+                </label>
+            </div>
+        );
     }
 
-    renderBrowserMockup()  {
+    renderBrowserMockup() {
         const { img } = this.state;
         const style = {
             backgroundImage: `url(${img})`
         };
-        return <div 
-            className="mockup-browser"
-            ref={ref => this.mockup = ref}>
-            <div className="toolbar">
-                <div className="toolbar-buttons">
-                    <div className="toolbar-button button-close"></div>
-                    <div className="toolbar-button button-minimize"></div>
-                    <div className="toolbar-button button-maximize"></div>
+        return (
+            <div className="mockup-browser" ref={ref => (this.mockup = ref)}>
+                <div className="toolbar">
+                    <div className="toolbar-buttons">
+                        <div className="toolbar-button button-close" />
+                        <div className="toolbar-button button-minimize" />
+                        <div className="toolbar-button button-maximize" />
+                    </div>
                 </div>
+                <div className="content">{img ? <img src={img} /> : null}</div>
             </div>
-            <div className="content">
-                {img ? <img src={img} /> : null}  
-            </div>
-        </div>;
+        );
     }
 
-    renderDownloadButton(){
+    renderDownloadButton() {
         const { fileInput } = this;
         const props = {
             className: 'button',
             disabled: fileInput ? null : true,
             onClick: fileInput ? () => this.handleDownload() : null
         };
-        return <div>
-            <a {...props}>
-                Download
-            </a>
-        </div>;
+        return (
+            <div>
+                <a {...props}>Download mockup</a>
+            </div>
+        );
     }
 
     async handleDownload() {
