@@ -11,9 +11,6 @@ class App extends Component {
         this.state = {};
         this.fileInput = null;
         this.mockup = null;
-
-        this.fileInputRef = this.fileInputRef.bind(this);
-        this.handleFileInput = this.handleFileInput.bind(this);
     }
 
     render() {
@@ -24,9 +21,7 @@ class App extends Component {
             </p>
             {this.renderFileInput()}
             {this.renderBrowserMockup()}
-            <div>
-                <a className="button" onClick={() => this.handleDownload()}>Download</a>
-            </div>
+            {this.renderDownloadButton()}
         </div>
     }
 
@@ -36,9 +31,8 @@ class App extends Component {
                 <input 
                     className="file-input" 
                     type="file" 
-                    onChange={this.handleFileInput}
-                    ref={ref => this.fileInput = ref}
-                    />
+                    onChange={() => this.handleFileInput()}
+                    ref={ref => this.fileInput = ref} />
                 <span className="file-cta">
                     <span className="file-icon">
                         <i className="fa fa-upload"></i>
@@ -70,21 +64,34 @@ class App extends Component {
         </div>;
     }
 
+    renderDownloadButton(){
+        const { fileInput } = this;
+        const props = {
+            className: 'button',
+            disabled: fileInput ? null : true,
+            onClick: fileInput ? () => this.handleDownload() : null
+        };
+        return <div>
+            <a {...props}>
+                Download
+            </a>
+        </div>;
+    }
+
     async handleDownload() {
         const node = document.querySelector('.mockup-browser');
         const canvas = await convertToCanvas(node);
-        var dataURL = canvas.toDataURL('image/png');//.replace("image/png", "image/octet-stream"); 
+        var dataURL = canvas.toDataURL('image/png');
         downloadImage(dataURL);
     }
 
-    async handleFileInput(event) {
+    async handleFileInput() {
         try {
             const file = this.fileInput.files[0];
             const img = await getImageUrl(file);
             this.setState({ img });
         } catch (error) {
             console.log(error);
-            // this.setState({ error, status: STATUS_ERROR });
         }
     }
 }
